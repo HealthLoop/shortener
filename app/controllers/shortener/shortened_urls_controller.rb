@@ -14,8 +14,9 @@ class Shortener::ShortenedUrlsController < ActionController::Base
       # for the system. You could log the request origin
       # browser type, ip address etc.
       Thread.new do
-        sl.increment!(:use_count)
-        ActiveRecord::Base.connection.close
+        ActiveRecord::Base.connection_pool.with_connection do
+          sl.increment!(:use_count)
+        end
       end
 
       params.except! *[:id, :action, :controller]

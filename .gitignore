@@ -13,3 +13,4 @@ bin/*
 Gemfile.lock
 .rvmrc
 .redcar/*
+.idea
