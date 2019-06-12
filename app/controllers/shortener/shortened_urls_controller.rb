@@ -19,13 +19,14 @@ class Shortener::ShortenedUrlsController < ActionController::Base
         end
       end
 
-      params.except! *[:id, :action, :controller]
+      params_hash = params.dup.to_unsafe_hash
+      params_hash.except! *[:id, :action, :controller]
       url = sl.url
 
-      if params.present?
+      if params_hash.present?
         uri = URI.parse(sl.url)
         existing_params = Rack::Utils.parse_nested_query(uri.query)
-        merged_params   = existing_params.merge(params)
+        merged_params   = existing_params.merge(params_hash)
         uri.query       = merged_params.to_query
         url             = uri.to_s
       end
